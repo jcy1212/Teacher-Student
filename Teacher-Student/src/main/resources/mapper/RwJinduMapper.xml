@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxy.dao.RwJinduMapper">
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+    <resultMap id="RwJinduResultMap" type="com.zxy.domain.RwJindu">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="rw_jindu" property="jindu" jdbcType="VARCHAR" />
+        <result column="rw_name" property="rwName" jdbcType="VARCHAR" />
+        <result column="rwjd_studname" property="rwjdStudname" jdbcType="VARCHAR" />
+    </resultMap>
+    <!-- 查询单条记录 -->
+    <select id="selectJdById" parameterType="int" resultMap="RwJinduResultMap">
+    	select * from t_rwjindu where id=#{id}
+    </select>
+    <select id="selectAllRwJindu"  resultMap="RwJinduResultMap" parameterType="java.util.Map">
+        select * from t_rwjindu
+        <where>
+        	<if test="str != null">
+        		rwjd_studname=#{str}
+        	</if>
+        	
+        </where>
+        order by id asc
+    </select>
+    <select id="selectCount" resultType="int" parameterType="java.util.Map">
+    	select count(*) from t_rwjindu 
+    	<where>
+        	<if test="str != null">
+        		sw_name=#{str} 
+        	</if>
+        	<if test="comeDate !=null">
+        		and come_date =#{comeDate}
+        	</if>
+        </where>
+    </select>
+  
+     <update id="updateRwJindu" parameterType="com.zxy.domain.RwJindu">
+    	update t_rwjindu set 
+    	<if test=" jindu !=null">
+    		rw_jindu=#{jindu}
+    	</if>
+		where id=#{id}
+    </update>
+   
+    
+</mapper>

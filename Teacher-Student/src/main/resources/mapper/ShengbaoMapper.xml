@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxy.dao.ShengbaoMapper">
+	<resultMap id="ShengbaoMap" type="com.zxy.domain.Shengbao">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="sb_name" property="sbName" jdbcType="VARCHAR" />
+		<result column="student_id" property="studentId" jdbcType="INTEGER" />
+		<result column="student_name" property="studentName" jdbcType="VARCHAR" />
+		<result column="info" property="info" jdbcType="VARCHAR" />
+		<result column="come_date" property="comeDate" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<insert id="addShengbao" parameterType="com.zxy.domain.Shengbao">
+		insert into t_shengbao
+		(sb_name,student_id,come_date,info,student_name)
+		VALUES (#{sbName},#{studentId},NOW(),#{info},#{studentName})
+	</insert>
+	
+	
+	
+	<select id="selectShengbaoById" parameterType="int" resultMap="ShengbaoMap">
+		select * from t_shengbao where id=#{id} order by id asc
+	</select>
+
+	<select id="selectAllShengbao" parameterType="java.util.Map" resultMap="ShengbaoMap">
+		select tt.*,ts.student_name from t_students ts,t_shengbao tt
+		<where>
+			tt.student_id =ts.id
+			<if test="str !=null">
+			 student_name=#{str}
+			</if>
+			<if test="beginDate !=null">
+				<![CDATA[
+				and	come_date >=#{beginDate}
+				]]>
+			</if>
+			<if test="endDate !=null">
+				<![CDATA[
+				and	come_date<#{endDate}
+				]]>
+			</if>
+			
+		</where> order by id asc
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from  t_students ts,t_shengbao tt
+		<where>
+			ts.id =tt.student_id
+			<if test="str !=null">
+			 and (sb_name =#{str})
+			</if>
+			<if test="beginDate !=null">
+				<![CDATA[
+				and	come_date >=#{beginDate}
+				]]>
+			</if>
+			<if test="endDate !=null">
+				<![CDATA[
+				and	come_date < #{endDate}
+				]]>
+			</if>
+		</where>
+	</select>
+
+</mapper>

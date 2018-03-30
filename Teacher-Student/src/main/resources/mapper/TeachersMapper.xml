@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxy.dao.TeachersMapper">
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+    <resultMap id="BaseResultMap" type="com.zxy.domain.Teachers">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="teacher_name" property="teacherName" jdbcType="VARCHAR" />
+        <result column="teacher_job" property="teacherJob" jdbcType="VARCHAR" />
+        <result column="is_exist" property="isExist" jdbcType="INTEGER" />
+        <result column="come_date" property="comeDate" jdbcType="DATE" />
+        <result column="out_date" property="outDate" jdbcType="DATE" />
+    </resultMap>
+    <!-- 查询单条记录 -->
+    <select id="selectTeacherById" parameterType="int" resultMap="BaseResultMap">
+    	select * from t_teachers where id=#{id}
+    </select>
+    <select id="selectAllTeachers"  resultMap="BaseResultMap" parameterType="java.util.Map">
+        select * from t_teachers 
+        <where>
+        	<if test="str != null">
+        		teacher_name=#{str}
+        	</if>
+        	<if test="beginDate !=null">
+        	<![CDATA[
+        		and come_date >= #{beginDate}
+        		]]>
+        	</if>
+        	<if test="endDate !=null">
+        	<![CDATA[
+        		and come_date < #{endDate}
+        		]]>
+        	</if>
+        	
+        </where>
+        order by id asc
+    </select>
+    <select id="selectCount" resultType="int" parameterType="java.util.Map">
+    	select count(*) from t_teachers 
+    	<where>
+        	<if test="str != null">
+        		teacher_name=#{str} 
+        	</if>
+        	<if test="comeDate !=null">
+        		and come_date =#{comeDate}
+        	</if>
+        </where>
+    </select>
+    <insert id="addTeacher" parameterType="com.zxy.domain.Teachers">
+    	insert into t_teachers (teacher_name,teacher_job,is_exist,come_date,salary)
+		VALUES(#{teacherName},#{teacherJob},0,NOW(),#{salary})
+    </insert>
+    
+    <delete id="deleteTeacherById" parameterType="int">
+    	delete from t_teachers where id=#{value}
+    </delete>
+    
+    <update id="updateTeacher" parameterType="com.zxy.domain.Teachers">
+    	update t_teachers set 
+    	<if test="teacherName != null">
+    		teacher_name=#{teacherName}
+    	</if>
+    	<if test="teacherJob != null">
+    		,teacher_job=#{teacherJob}
+    	</if>
+    	<if test="comeDate != null">
+    		,come_date=#{teacherName}
+    	</if>
+    	<if test="isExist != null">
+    		,is_exist=#{isExist}
+    	</if>
+    	<if test="outDate != null">
+    		,out_date=#{outDate}
+    	</if>
+    	<if test="salary != null">
+    		,salary=#{salary}
+    	</if>
+		where id=#{id}
+    </update>
+</mapper>

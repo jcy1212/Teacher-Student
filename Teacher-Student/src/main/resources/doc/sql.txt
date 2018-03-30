@@ -1,0 +1,58 @@
+DROP TABLE IF EXISTS `t_teachers`;
+CREATE TABLE `t_teachers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `teacher_name` varchar(20) DEFAULT NULL,
+  `teacher_job` varchar(50) DEFAULT NULL,
+  `is_exist` int(11) DEFAULT '0' COMMENT '0 在职   1 离职',
+  `come_date` date DEFAULT NULL,
+  `out_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_teachers
+-- ----------------------------
+INSERT INTO `t_teachers` VALUES ('1', '张三', '小学老师', '0', '2017-12-15', null);
+INSERT INTO `t_teachers` VALUES ('2', '李四', '中学老师', '0', '2017-12-15', null);
+
+
+DROP TABLE IF EXISTS `t_students`;
+CREATE TABLE `t_students` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_name` varchar(25) DEFAULT NULL,
+  `grade` varchar(32) DEFAULT NULL,
+  `teacher_id` int(11) DEFAULT '0',
+  `is_exist` int(10) DEFAULT '0' COMMENT '0 在辅导班  1 已离开',
+  `come_date` date DEFAULT NULL,
+  `out_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_students
+-- ----------------------------
+INSERT INTO `t_students` VALUES ('1', null, '一年级', '1', '0', '2017-12-15', null);
+INSERT INTO `t_students` VALUES ('2', null, '二年级', '1', '0', '2017-12-15', null);
+INSERT INTO `t_students` VALUES ('3', null, '初一', '2', '0', '2017-12-15', null);
+INSERT INTO `t_students` VALUES ('4', '小明', '一年级', '1', '0', '2017-12-15', null);
+
+
+DROP TABLE IF EXISTS `t_school_work`;
+CREATE TABLE `t_school_work` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `student_id` int(11) DEFAULT '0',
+  `work_content` varchar(256) DEFAULT NULL,
+  `work_status` int(11) DEFAULT '0' COMMENT '0 未完成  1 已完成  2 订正',
+  `correct_teacher` int(11) DEFAULT '0',
+  `create_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_school_work
+-- ----------------------------
+INSERT INTO `t_school_work` VALUES ('1', '1', '默写', '0', '1', '2017-12-15');
+INSERT INTO `t_school_work` VALUES ('2', '1', '背课文', '0', '1', '2017-12-15');
+INSERT INTO `t_school_work` VALUES ('3', '2', '抄词', '2', '1', '2017-12-15');
+INSERT INTO `t_school_work` VALUES ('4', '2', '订正', '0', '1', '2017-12-15');
+INSERT INTO `t_school_work` VALUES ('5', '3', '英语听写', '0', '2', '2017-12-15');

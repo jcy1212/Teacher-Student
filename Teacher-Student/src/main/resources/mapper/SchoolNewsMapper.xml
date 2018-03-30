@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxy.dao.SchoolNewsMapper">
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+    <resultMap id="NewsResultMap" type="com.zxy.domain.SchoolNews">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+        <result column="author" property="author" jdbcType="VARCHAR" />
+        <result column="releaseTime" property="releaseTime" jdbcType="DATE" />
+        <result column="content" property="content" jdbcType="VARCHAR" />
+        <result column="keywords" property="keywords" jdbcType="VARCHAR" />
+        <result column="come_date" property="comeDate" jdbcType="VARCHAR" />
+    </resultMap>
+    <!-- 查询单条记录 -->
+    <select id="selectAllNewsById" parameterType="int" resultMap="NewsResultMap">
+    	select * from t_news where id=#{id}
+    </select>
+    <select id="selectAllNews"  resultMap="NewsResultMap" parameterType="java.util.Map">
+        select * from t_news
+        <where>
+        	<if test="str != null">
+        		author=#{str}
+        	</if>
+        	<if test="beginDate !=null">
+        	<![CDATA[
+        		and come_date >= #{beginDate}
+        		]]>
+        	</if>
+        	<if test="endDate !=null">
+        	<![CDATA[
+        		and come_date < #{endDate}
+        		]]>
+        	</if>
+        	
+        </where>
+        order by id asc
+    </select>
+    <select id="selectCount" resultType="int" parameterType="java.util.Map">
+    	select count(*) from t_news 
+    	<where>
+        	<if test="str != null">
+        		author=#{str} 
+        	</if>
+        	<if test="comeDate !=null">
+        		and come_date =#{comeDate}
+        	</if>
+        </where>
+    </select>
+  
+    
+   
+    
+</mapper>

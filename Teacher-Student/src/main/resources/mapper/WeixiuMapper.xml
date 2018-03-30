@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxy.dao.WeixiuMapper">
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+    <resultMap id="WeixiuResultMap" type="com.zxy.domain.Weixiu">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="wx_name" property="wxName" jdbcType="VARCHAR" />
+        <result column="wx_info" property="wxInfo" jdbcType="VARCHAR" />
+        <result column="come_date" property="comeDate" jdbcType="VARCHAR" />
+    </resultMap>
+    <!-- 查询单条记录 -->
+    <select id="selectWeixiuById" parameterType="int" resultMap="WeixiuResultMap">
+    	select * from t_weixiu where id=#{id}
+    </select>
+    <select id="selectAllWeixiu"  resultMap="WeixiuResultMap" parameterType="java.util.Map">
+        select * from t_weixiu
+        <where>
+        	<if test="str != null">
+        		wx_name=#{str}
+        	</if>
+        	<if test="beginDate !=null">
+        	<![CDATA[
+        		and come_date >= #{beginDate}
+        		]]>
+        	</if>
+        	<if test="endDate !=null">
+        	<![CDATA[
+        		and come_date < #{endDate}
+        		]]>
+        	</if>
+        	
+        </where>
+        order by id asc
+    </select>
+    <select id="selectCount" resultType="int" parameterType="java.util.Map">
+    	select count(*) from t_weixiu 
+    	<where>
+        	<if test="str != null">
+        		bx_name=#{str} 
+        	</if>
+        	<if test="comeDate !=null">
+        		and come_date =#{comeDate}
+        	</if>
+        </where>
+    </select>
+  
+     <!--  <update id="updateRenwu" parameterType="com.zxy.domain.Renwu">
+    	update t_baoxiu set 
+    	<if test=" studentName !=null">
+    		student_name=#{studentName}
+    	</if>
+		where id=#{id}
+    </update>
+   -->
+    
+</mapper>

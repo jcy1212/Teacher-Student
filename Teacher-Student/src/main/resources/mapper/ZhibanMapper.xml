@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxy.dao.ZhibanMapper">
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+    <resultMap id="ZhibanResultMap" type="com.zxy.domain.Zhiban">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="zb_name" property="zbName" jdbcType="VARCHAR" />
+        <result column="zb_place" property="zbPlace" jdbcType="VARCHAR" />
+        <result column="zb_date" property="zbDate" jdbcType="DATE" />
+    </resultMap>
+    <!-- 查询单条记录 -->
+    <select id="selectAllZbById" parameterType="int" resultMap="ZhibanResultMap">
+    	select * from t_zhiban where id=#{id}
+    </select>
+    <select id="selectAllZhiban"  resultMap="ZhibanResultMap" parameterType="java.util.Map">
+        select * from t_zhiban
+        <where>
+        	<if test="str != null">
+        		author=#{str}
+        	</if>
+        	<if test="beginDate !=null">
+        	<![CDATA[
+        		and come_date >= #{beginDate}
+        		]]>
+        	</if>
+        	<if test="endDate !=null">
+        	<![CDATA[
+        		and come_date < #{endDate}
+        		]]>
+        	</if>
+        	
+        </where>
+        order by id asc
+    </select>
+    <select id="selectCount" resultType="int" parameterType="java.util.Map">
+    	select count(*) from t_zhiban 
+    	<where>
+        	<if test="str != null">
+        		author=#{str} 
+        	</if>
+        	<if test="comeDate !=null">
+        		and come_date =#{comeDate}
+        	</if>
+        </where>
+    </select>
+  
+  <update id="updateZb" parameterType="com.zxy.domain.Zhiban">
+    	update t_zhiban set 
+    	<if test=" zbName!= null">
+    		zb_name=#{zbName}
+    	</if>
+		where id=#{id}
+    </update>
+    
+   
+    
+</mapper>

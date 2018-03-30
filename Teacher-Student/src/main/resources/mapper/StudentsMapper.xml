@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zxy.dao.StudentsMapper">
+	<resultMap id="StudentMap" type="com.zxy.domain.Students">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="student_name" property="studentName" jdbcType="VARCHAR" />
+		<result column="teacher_id" property="teacherId" jdbcType="VARCHAR" />
+		<result column="teacher_name" property="teacherName" jdbcType="VARCHAR" />
+		<result column="grade" property="grade" jdbcType="VARCHAR" />
+		<result column="is_exist" property="isExist" jdbcType="INTEGER" />
+		<result column="come_date" property="comeDate" jdbcType="VARCHAR" />
+		<result column="out_date" property="outDate" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="addNewStudent" parameterType="com.zxy.domain.Students">
+		insert into t_students
+		(student_name,grade,teacher_id,is_exist,come_date,teacher_name)
+		VALUES (#{studentName},#{grade},#{teacherId},0,NOW(),#{teacherName})
+	</insert>
+
+	<update id="updateStudent" parameterType="com.zxy.domain.Students">
+		update t_students set 
+		<if test="studentName != null">
+			 student_name=#{studentName}
+		</if>
+		<if test="grade != null">
+			, grade=#{grade}
+		</if>
+		<if test="teacherId != null">
+			, teacher_id=#{teacherId}
+		</if>
+		<if test="teacherId != null">
+			, teacher_name=#{teacherName}
+		</if>
+		<if test="comeDate != null">
+			,come_date=#{comeDate}
+		</if>
+		<if test="outDate != null">
+			,out_date=#{outDate}
+		</if>
+		where id=#{id}
+	</update>
+
+	<delete id="deleteStudentById" parameterType="int">
+    	delete from t_students where id=#{value}
+    </delete>
+
+
+	<select id="selectStudentById" parameterType="int" resultMap="StudentMap">
+		select * from t_students where id=#{id} order by id asc
+	</select>
+
+	<select id="selectAllStudent" parameterType="java.util.Map" resultMap="StudentMap">
+		select ts.*,tt.teacher_name from t_students ts,t_teachers tt
+		<where>
+			ts.teacher_id =tt.id
+			<if test="str !=null">
+			 and (student_name =#{str} or grade=#{str} or tt.teacher_name=#{str})
+			</if>
+			<if test="beginDate !=null">
+				<![CDATA[
+				and	come_date >=#{beginDate}
+				]]>
+			</if>
+			<if test="endDate !=null">
+				<![CDATA[
+				and	come_date<#{endDate}
+				]]>
+			</if>
+			
+			and ts.is_exist=0
+		</where> order by id asc
+	</select>
+	
+	<select id="selectCount" parameterType="java.util.Map" resultType="int">
+		select count(*) from  t_students ts,t_teachers tt
+		<where>
+			ts.teacher_id =tt.id
+			<if test="str !=null">
+			 and (student_name =#{str} or grade=#{str} or tt.teacher=#{str})
+			</if>
+			<if test="beginDate !=null">
+				<![CDATA[
+				and	come_date >=#{beginDate}
+				]]>
+			</if>
+			<if test="endDate !=null">
+				<![CDATA[
+				and	come_date < #{endDate}
+				]]>
+			</if>
+			
+			and ts.is_exist=0
+		</where>
+	</select>
+
+</mapper>
